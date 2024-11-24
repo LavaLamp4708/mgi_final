@@ -118,10 +118,11 @@ class _SalesListPageState extends State<SalesListPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(selected_sale_record!.car_id),
-            Text(selected_sale_record!.dealership_id),
-            Text(selected_sale_record!.date_of_purchase),
-            Text('${selected_sale_record!.id}'),
+            Text('Customer ID: ${selected_sale_record!.customer_id}'),
+            Text('Car ID: ${selected_sale_record!.car_id}'),
+            Text('Dealership ID: ${selected_sale_record!.dealership_id}'),
+            Text('Purchace Date: ${selected_sale_record!.date_of_purchase}'),
+            Text('ID: ${selected_sale_record!.id}'),
             ElevatedButton(
               onPressed: () {
                 showDialog<String>(
