@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:mgi_final/HomePage.dart';
+import 'salesListPage.dart';
+import 'addingSalesPage.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,13 +19,14 @@ class MainApp extends StatelessWidget {
       home: const HomePage(title: 'Home Page'),
       routes: {
         // These will be the pages that the user navigates to from the homepage
-        // 
+        //
         // Uncomment your page when you're Done with it
 
         //'/customerListPage': (context) =>       const CustomerListPage(title: 'Customers List')
         //'/carListPage': (context) =>            const CarListPage(title: 'Cars List')
         //'/carDealershipListPage': (context) =>  const CarDealershipListPage(title: 'Car List')
-        //'/salesListPage': (context) =>          const SalesListPage(title: 'Sales List')
+        '/salesListPage': (context) =>          const SalesListPage(title: 'Sales List'),
+        '/addingSalesPage': (context) => AddingSalesPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
