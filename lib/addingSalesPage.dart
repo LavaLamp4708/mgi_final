@@ -24,13 +24,16 @@ class AddingSalesPageState extends State<AddingSalesPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final snackBar = SnackBar(
         content: Text('Welcome back'),
+          action:SnackBarAction( label:'Load last record', onPressed: (){
+            loadData();
+          })
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
     $FloorMGIFinalDatabase.databaseBuilder('app_database.db').build().then((database) {
       my_salesDAO = database.salesDAO;
     });
-    loadData();
+
   }
 
   Future<void> loadData() async{
