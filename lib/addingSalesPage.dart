@@ -1,17 +1,22 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'database/entities/sales_entity.dart';
+import 'database/DAOs/sales_dao.dart';
+import 'database/database.dart';
 
 class AddingSalesPage extends StatefulWidget {
   @override
   State<AddingSalesPage> createState() => AddingSalesPageState();
 }
 
+
 class AddingSalesPageState extends State<AddingSalesPage> {
   var _controllerCustomerID = TextEditingController();
   var _controllerCarID = TextEditingController();
   var _controllerDealershipID = TextEditingController();
   var _controllerPurchaseDate = TextEditingController();
+  late SalesDAO my_salesDAO;
   final EncryptedSharedPreferences encryptedSharedPreferences = EncryptedSharedPreferences();
   @override
   void initState() {
@@ -22,8 +27,12 @@ class AddingSalesPageState extends State<AddingSalesPage> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
+    $FloorMGIFinalDatabase.databaseBuilder('app_database.db').build().then((database) {
+      my_salesDAO = database.salesDAO;
+    });
     loadData();
   }
+
   Future<void> loadData() async{
     String? savedCustomerID = await encryptedSharedPreferences.getString("customerID");
     String? savedCarID = await encryptedSharedPreferences.getString("carID");
@@ -94,6 +103,33 @@ class AddingSalesPageState extends State<AddingSalesPage> {
             onTap: (){
               _selectDate();
             },),
+            ElevatedButton(
+              onPressed: () {
+                if(_controllerCustomerID.value.text.isNotEmpty
+                &_controllerCarID.value.text.isNotEmpty
+                &_controllerDealershipID.value.text.isNotEmpty
+                &_controllerPurchaseDate.value.text.isNotEmpty) {
+                  setState(() {
+                    var newSalesRecord = SalesEntity(SalesEntity.ID++,
+                      _controllerCustomerID.value.text,
+                      _controllerCarID.value.text,
+                      _controllerDealershipID.value.text,
+                      _controllerPurchaseDate.value.text,);
+                    my_salesDAO.doInsert(newSalesRecord);
+
+                    _controllerCustomerID.text = "";
+                    _controllerCarID.text = "";
+                    _controllerDealershipID.text = "";
+                    _controllerPurchaseDate.text = "";
+                  });
+                } else {
+                  var snackBar = SnackBar(content: Text("Input field is required!"));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Submit'),
+            ),
 
 
           ],
@@ -112,10 +148,13 @@ class AddingSalesPageState extends State<AddingSalesPage> {
     }
 
   }
+
 }
+
 
 void main() {
   runApp(MaterialApp(
     home: AddingSalesPage(),
   ));
 }
+
