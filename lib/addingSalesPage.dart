@@ -125,11 +125,12 @@ class AddingSalesPageState extends State<AddingSalesPage> {
                     _controllerDealershipID.text = "";
                     _controllerPurchaseDate.text = "";
                   });
+                  Navigator.pop(context);
                 } else {
                   var snackBar = SnackBar(content: Text("Input field is required!"));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
-                Navigator.pop(context);
+
               },
               child: const Text('Submit'),
             ),
