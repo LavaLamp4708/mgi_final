@@ -6,13 +6,18 @@ class SalesEntity {
 
   @primaryKey
   final int id;
-  final String customer_id;
-  final String car_id;
-  final String dealership_id;
-  final String date_of_purchase;
+  final String customerId;
+  final String carId;
+  final String dealershipId;
+  final String dateOfPurchase;
 
-  SalesEntity(this.id, this.customer_id, this.car_id,
-      this.dealership_id, this.date_of_purchase) {
+  SalesEntity(
+      this.id,
+      this.customerId,
+      this.carId,
+      this.dealershipId,
+      this.dateOfPurchase
+      ) {
     ID = id > ID ? id+1 : ID;
   }
 }
