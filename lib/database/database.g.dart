@@ -102,13 +102,13 @@ class _$MGIFinalDatabase extends MGIFinalDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `CarDealershipsEntity` (`id` INTEGER NOT NULL, `carDealership` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `CarDealershipsEntity` (`id` INTEGER NOT NULL, `carDealershipName` TEXT NOT NULL, `streetAddress` TEXT NOT NULL, `city` TEXT NOT NULL, `postalCode` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `CarsEntity` (`id` INTEGER NOT NULL, `car` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `CarsEntity` (`id` INTEGER NOT NULL, `brand` TEXT NOT NULL, `model` TEXT NOT NULL, `numberOfPassengers` INTEGER NOT NULL, `gasTankOrBatterySize` REAL NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `CustomersEntity` (`id` INTEGER NOT NULL, `customer` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `CustomersEntity` (`id` INTEGER NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `birthDate` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `SalesEntity` (`id` INTEGER NOT NULL, `sale` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `SalesEntity` (`id` INTEGER NOT NULL, `customerId` INTEGER NOT NULL, `carId` INTEGER NOT NULL, `dealershipId` INTEGER NOT NULL, `datOfPurchase` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -148,7 +148,21 @@ class _$CarDealershipsDAO extends CarDealershipsDAO {
             'CarDealershipsEntity',
             (CarDealershipsEntity item) => <String, Object?>{
                   'id': item.id,
-                  'carDealership': item.carDealership
+                  'carDealershipName': item.carDealershipName,
+                  'streetAddress': item.streetAddress,
+                  'city': item.city,
+                  'postalCode': item.postalCode
+                }),
+        _carDealershipsEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'CarDealershipsEntity',
+            ['id'],
+            (CarDealershipsEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'carDealershipName': item.carDealershipName,
+                  'streetAddress': item.streetAddress,
+                  'city': item.city,
+                  'postalCode': item.postalCode
                 }),
         _carDealershipsEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -156,7 +170,10 @@ class _$CarDealershipsDAO extends CarDealershipsDAO {
             ['id'],
             (CarDealershipsEntity item) => <String, Object?>{
                   'id': item.id,
-                  'carDealership': item.carDealership
+                  'carDealershipName': item.carDealershipName,
+                  'streetAddress': item.streetAddress,
+                  'city': item.city,
+                  'postalCode': item.postalCode
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -168,6 +185,8 @@ class _$CarDealershipsDAO extends CarDealershipsDAO {
   final InsertionAdapter<CarDealershipsEntity>
       _carDealershipsEntityInsertionAdapter;
 
+  final UpdateAdapter<CarDealershipsEntity> _carDealershipsEntityUpdateAdapter;
+
   final DeletionAdapter<CarDealershipsEntity>
       _carDealershipsEntityDeletionAdapter;
 
@@ -175,12 +194,22 @@ class _$CarDealershipsDAO extends CarDealershipsDAO {
   Future<List<CarDealershipsEntity>> getAll() async {
     return _queryAdapter.queryList('SELECT * FROM CarDealershipsEntity',
         mapper: (Map<String, Object?> row) => CarDealershipsEntity(
-            row['id'] as int, row['carDealership'] as String));
+            row['id'] as int,
+            row['carDealershipName'] as String,
+            row['streetAddress'] as String,
+            row['city'] as String,
+            row['postalCode'] as String));
   }
 
   @override
   Future<void> doInsert(CarDealershipsEntity carDealership) async {
     await _carDealershipsEntityInsertionAdapter.insert(
+        carDealership, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> doUpdate(CarDealershipsEntity carDealership) async {
+    await _carDealershipsEntityUpdateAdapter.update(
         carDealership, OnConflictStrategy.abort);
   }
 
@@ -198,14 +227,35 @@ class _$CarsDAO extends CarsDAO {
         _carsEntityInsertionAdapter = InsertionAdapter(
             database,
             'CarsEntity',
-            (CarsEntity item) =>
-                <String, Object?>{'id': item.id, 'car': item.car}),
+            (CarsEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'brand': item.brand,
+                  'model': item.model,
+                  'numberOfPassengers': item.numberOfPassengers,
+                  'gasTankOrBatterySize': item.gasTankOrBatterySize
+                }),
+        _carsEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'CarsEntity',
+            ['id'],
+            (CarsEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'brand': item.brand,
+                  'model': item.model,
+                  'numberOfPassengers': item.numberOfPassengers,
+                  'gasTankOrBatterySize': item.gasTankOrBatterySize
+                }),
         _carsEntityDeletionAdapter = DeletionAdapter(
             database,
             'CarsEntity',
             ['id'],
-            (CarsEntity item) =>
-                <String, Object?>{'id': item.id, 'car': item.car});
+            (CarsEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'brand': item.brand,
+                  'model': item.model,
+                  'numberOfPassengers': item.numberOfPassengers,
+                  'gasTankOrBatterySize': item.gasTankOrBatterySize
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -215,18 +265,29 @@ class _$CarsDAO extends CarsDAO {
 
   final InsertionAdapter<CarsEntity> _carsEntityInsertionAdapter;
 
+  final UpdateAdapter<CarsEntity> _carsEntityUpdateAdapter;
+
   final DeletionAdapter<CarsEntity> _carsEntityDeletionAdapter;
 
   @override
   Future<List<CarsEntity>> getAll() async {
     return _queryAdapter.queryList('SELECT * FROM CarsEntity',
-        mapper: (Map<String, Object?> row) =>
-            CarsEntity(row['id'] as int, row['car'] as String));
+        mapper: (Map<String, Object?> row) => CarsEntity(
+            row['id'] as int,
+            row['brand'] as String,
+            row['model'] as String,
+            row['numberOfPassengers'] as int,
+            row['gasTankOrBatterySize'] as double));
   }
 
   @override
   Future<void> doInsert(CarsEntity car) async {
     await _carsEntityInsertionAdapter.insert(car, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> doUpdate(CarsEntity car) async {
+    await _carsEntityUpdateAdapter.update(car, OnConflictStrategy.abort);
   }
 
   @override
@@ -243,14 +304,35 @@ class _$CustomersDAO extends CustomersDAO {
         _customersEntityInsertionAdapter = InsertionAdapter(
             database,
             'CustomersEntity',
-            (CustomersEntity item) =>
-                <String, Object?>{'id': item.id, 'customer': item.customer}),
+            (CustomersEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'firstName': item.firstName,
+                  'lastName': item.lastName,
+                  'address': item.address,
+                  'birthDate': item.birthDate
+                }),
+        _customersEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'CustomersEntity',
+            ['id'],
+            (CustomersEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'firstName': item.firstName,
+                  'lastName': item.lastName,
+                  'address': item.address,
+                  'birthDate': item.birthDate
+                }),
         _customersEntityDeletionAdapter = DeletionAdapter(
             database,
             'CustomersEntity',
             ['id'],
-            (CustomersEntity item) =>
-                <String, Object?>{'id': item.id, 'customer': item.customer});
+            (CustomersEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'firstName': item.firstName,
+                  'lastName': item.lastName,
+                  'address': item.address,
+                  'birthDate': item.birthDate
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -260,18 +342,30 @@ class _$CustomersDAO extends CustomersDAO {
 
   final InsertionAdapter<CustomersEntity> _customersEntityInsertionAdapter;
 
+  final UpdateAdapter<CustomersEntity> _customersEntityUpdateAdapter;
+
   final DeletionAdapter<CustomersEntity> _customersEntityDeletionAdapter;
 
   @override
   Future<List<CustomersEntity>> getAll() async {
     return _queryAdapter.queryList('SELECT * FROM CustomersEntity',
-        mapper: (Map<String, Object?> row) =>
-            CustomersEntity(row['id'] as int, row['customer'] as String));
+        mapper: (Map<String, Object?> row) => CustomersEntity(
+            row['id'] as int,
+            row['firstName'] as String,
+            row['lastName'] as String,
+            row['address'] as String,
+            row['birthDate'] as String));
   }
 
   @override
   Future<void> doInsert(CustomersEntity customer) async {
     await _customersEntityInsertionAdapter.insert(
+        customer, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> doUpdate(CustomersEntity customer) async {
+    await _customersEntityUpdateAdapter.update(
         customer, OnConflictStrategy.abort);
   }
 
@@ -289,14 +383,35 @@ class _$SalesDAO extends SalesDAO {
         _salesEntityInsertionAdapter = InsertionAdapter(
             database,
             'SalesEntity',
-            (SalesEntity item) =>
-                <String, Object?>{'id': item.id, 'sale': item.sale}),
+            (SalesEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'customerId': item.customerId,
+                  'carId': item.carId,
+                  'dealershipId': item.dealershipId,
+                  'datOfPurchase': item.datOfPurchase
+                }),
+        _salesEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'SalesEntity',
+            ['id'],
+            (SalesEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'customerId': item.customerId,
+                  'carId': item.carId,
+                  'dealershipId': item.dealershipId,
+                  'datOfPurchase': item.datOfPurchase
+                }),
         _salesEntityDeletionAdapter = DeletionAdapter(
             database,
             'SalesEntity',
             ['id'],
-            (SalesEntity item) =>
-                <String, Object?>{'id': item.id, 'sale': item.sale});
+            (SalesEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'customerId': item.customerId,
+                  'carId': item.carId,
+                  'dealershipId': item.dealershipId,
+                  'datOfPurchase': item.datOfPurchase
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -306,18 +421,29 @@ class _$SalesDAO extends SalesDAO {
 
   final InsertionAdapter<SalesEntity> _salesEntityInsertionAdapter;
 
+  final UpdateAdapter<SalesEntity> _salesEntityUpdateAdapter;
+
   final DeletionAdapter<SalesEntity> _salesEntityDeletionAdapter;
 
   @override
   Future<List<SalesEntity>> getAll() async {
     return _queryAdapter.queryList('SELECT * FROM SalesEntity',
-        mapper: (Map<String, Object?> row) =>
-            SalesEntity(row['id'] as int, row['sale'] as String));
+        mapper: (Map<String, Object?> row) => SalesEntity(
+            row['id'] as int,
+            row['customerId'] as int,
+            row['carId'] as int,
+            row['dealershipId'] as int,
+            row['datOfPurchase'] as String));
   }
 
   @override
   Future<void> doInsert(SalesEntity sale) async {
     await _salesEntityInsertionAdapter.insert(sale, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> doUpdate(SalesEntity sale) async {
+    await _salesEntityUpdateAdapter.update(sale, OnConflictStrategy.abort);
   }
 
   @override

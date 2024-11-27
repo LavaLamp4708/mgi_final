@@ -9,6 +9,9 @@ abstract class CustomersDAO{
   @insert
   Future<void> doInsert(CustomersEntity customer);
 
+  @update
+  Future<void> doUpdate(CustomersEntity customer);
+
   @delete
   Future<void> doDelete(CustomersEntity customer);
 }

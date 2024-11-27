@@ -9,6 +9,9 @@ abstract class CarsDAO{
   @insert
   Future<void> doInsert(CarsEntity car);
 
+  @update
+  Future<void> doUpdate(CarsEntity car);
+
   @delete
   Future<void> doDelete(CarsEntity car);
 }

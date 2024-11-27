@@ -6,9 +6,18 @@ class CustomersEntity {
 
   @primaryKey
   final int id;
-  final String customer;
+  final String firstName;
+  final String lastName;
+  final String address;
+  final String birthDate;
 
-  CustomersEntity(this.id, this.customer) {
+  CustomersEntity(
+    this.id, 
+    this.firstName, 
+    this.lastName, 
+    this.address, 
+    this.birthDate
+  ) {
     ID = id > ID ? id+1 : ID;
   }
 }
