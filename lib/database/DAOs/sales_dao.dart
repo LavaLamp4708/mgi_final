@@ -9,6 +9,9 @@ abstract class SalesDAO{
   @insert
   Future<void> doInsert(SalesEntity sale);
 
+  @update
+  Future<void> doUpdate(SalesEntity sale);
+
   @delete
   Future<void> doDelete(SalesEntity sale);
 }
