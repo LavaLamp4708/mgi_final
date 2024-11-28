@@ -6,9 +6,18 @@ class CarDealershipsEntity {
 
   @primaryKey
   final int id;
-  final String carDealership;
+  final String carDealershipName;
+  final String streetAddress;
+  final String city;
+  final String postalCode;
 
-  CarDealershipsEntity(this.id, this.carDealership) {
+  CarDealershipsEntity(
+      this.id,
+      this.carDealershipName,
+      this.streetAddress,
+      this.city,
+      this.postalCode
+      ) {
     ID = id > ID ? id+1 : ID;
   }
 }
