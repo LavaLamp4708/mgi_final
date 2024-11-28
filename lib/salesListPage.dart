@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mgi_final/database/DAOs/sales_dao.dart';
 import 'package:mgi_final/database/entities/sales_entity.dart';
 import 'package:mgi_final/database/database.dart';
-import 'addingSalesPage.dart';
+
 
 void main() {
   runApp(const MaterialApp());
