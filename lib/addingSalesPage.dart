@@ -62,11 +62,7 @@ class AddingSalesPageState extends State<AddingSalesPage> {
       });
     }
   }
-  @override
-  void dispose() {
-    super.dispose();
-    saveData();
-  }
+
   saveData(){
     encryptedSharedPreferences.setString('customerID', _controllerCustomerID.value.text);
     encryptedSharedPreferences.setString('carID', _controllerCarID.value.text);
@@ -113,6 +109,7 @@ class AddingSalesPageState extends State<AddingSalesPage> {
                 &_controllerDealershipID.value.text.isNotEmpty
                 &_controllerPurchaseDate.value.text.isNotEmpty) {
                   setState(() {
+                    saveData();
                     var newSalesRecord = SalesEntity(SalesEntity.ID++,
                       _controllerCustomerID.value.text,
                       _controllerCarID.value.text,
@@ -125,7 +122,7 @@ class AddingSalesPageState extends State<AddingSalesPage> {
                     _controllerDealershipID.text = "";
                     _controllerPurchaseDate.text = "";
                   });
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, "/salesListPage");
                 } else {
                   var snackBar = SnackBar(content: Text("Input field is required!"));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
