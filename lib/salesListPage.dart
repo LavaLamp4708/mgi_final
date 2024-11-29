@@ -44,6 +44,35 @@ class _SalesListPageState extends State<SalesListPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Instructions'),
+                    content: const Text(
+                      '1. Use the Update button to edit records.\n'
+                          '2. Use the Delete button to remove a record.\n'
+                          '3. Use the Add button to insert a new record.\n'
+                          '4. Tap an item to view its details.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: reactiveLayout(),
     );
@@ -76,16 +105,14 @@ class _SalesListPageState extends State<SalesListPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Row(
-          children: [
+
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, "/addingSalesPage");
               },
               child: Text("Add"),
             ),
-          ],
-        ),
+
         Expanded(
           child: sale_records.isEmpty
               ? Text("There are no sales list in the list")
@@ -101,7 +128,7 @@ class _SalesListPageState extends State<SalesListPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Item $rowNum:"),
+                      Text("Sales Record $rowNum:"),
                       Text(sale_records[rowNum].date_of_purchase),
                     ],
                   ),
@@ -121,39 +148,101 @@ class _SalesListPageState extends State<SalesListPage> {
             Text('Customer ID: ${selected_sale_record!.customer_id}'),
             Text('Car ID: ${selected_sale_record!.car_id}'),
             Text('Dealership ID: ${selected_sale_record!.dealership_id}'),
-            Text('Purchace Date: ${selected_sale_record!.date_of_purchase}'),
+            Text('Purchase Date: ${selected_sale_record!.date_of_purchase}'),
             Text('ID: ${selected_sale_record!.id}'),
-            ElevatedButton(
-              onPressed: () {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Remove item'),
-                    content: Text('Do you want to remove this item?'),
-                    actions: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            my_salesDAO.doDelete(selected_sale_record!);
-                            sale_records.remove(selected_sale_record);
-                            selected_sale_record = null;
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Yes'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    final updatedRecord = await showDialog<SalesEntity>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        TextEditingController customerController = TextEditingController(text: selected_sale_record!.customer_id);
+                        TextEditingController carController = TextEditingController(text: selected_sale_record!.car_id);
+                        TextEditingController dealershipController = TextEditingController(text: selected_sale_record!.dealership_id);
+                        TextEditingController dateController = TextEditingController(text: selected_sale_record!.date_of_purchase);
+
+                        return AlertDialog(
+                          title: const Text('Update Record'),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(controller: customerController, decoration: const InputDecoration(labelText: 'Customer ID')),
+                                TextField(controller: carController, decoration: const InputDecoration(labelText: 'Car ID')),
+                                TextField(controller: dealershipController, decoration: const InputDecoration(labelText: 'Dealership ID')),
+                                TextField(
+                                  controller: dateController,
+                                  decoration: const InputDecoration(labelText: 'Purchase Date (YYYY-MM-DD)'),
+                                ),
+                              ],
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(SalesEntity(
+                                  selected_sale_record!.id,
+                                  customerController.text,
+                                  carController.text,
+                                  dealershipController.text,
+                                  dateController.text,
+                                ));
+                              },
+                              child: const Text('Update'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                    if (updatedRecord != null) {
+                      await my_salesDAO.doUpdate(updatedRecord);
+                      final updatedRecords = await my_salesDAO.getAll();
+                      setState(() {
+                        sale_records = updatedRecords;
+                        selected_sale_record = updatedRecord;
+                      });
+                    }
+                  },
+                  child: const Text('Update'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Remove item'),
+                        content: Text('Do you want to remove this item?'),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                my_salesDAO.doDelete(selected_sale_record!);
+                                sale_records.remove(selected_sale_record);
+                                selected_sale_record = null;
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Yes'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('No'),
+                          ),
+                        ],
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('No'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              child: const Text('Delete'),
+                    );
+                  },
+                  child: const Text('Delete'),
+                ),
+              ],
             )
+
+
           ],
         ),
       );
