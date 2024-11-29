@@ -23,7 +23,7 @@ class AddingSalesPageState extends State<AddingSalesPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final snackBar = SnackBar(
-        content: Text('Welcome back'),
+        content: Text('Welcome back, do you want to use the last record'),
           action:SnackBarAction( label:'Load last record', onPressed: (){
             loadData();
           })
@@ -103,20 +103,23 @@ class AddingSalesPageState extends State<AddingSalesPage> {
               _selectDate();
             },),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if(_controllerCustomerID.value.text.isNotEmpty
                 &_controllerCarID.value.text.isNotEmpty
                 &_controllerDealershipID.value.text.isNotEmpty
                 &_controllerPurchaseDate.value.text.isNotEmpty) {
+                  final allRecords = await my_salesDAO.getAll();
+                  final nextID = (allRecords.isNotEmpty
+                      ? allRecords.map((record) => record.id).reduce((a, b) => a > b ? a : b)
+                      : 0) + 1;
                   setState(() {
                     saveData();
-                    var newSalesRecord = SalesEntity(SalesEntity.ID++,
+                    var newSalesRecord = SalesEntity(nextID,
                       _controllerCustomerID.value.text,
                       _controllerCarID.value.text,
                       _controllerDealershipID.value.text,
                       _controllerPurchaseDate.value.text,);
                     my_salesDAO.doInsert(newSalesRecord);
-
                     _controllerCustomerID.text = "";
                     _controllerCarID.text = "";
                     _controllerDealershipID.text = "";
