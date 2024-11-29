@@ -23,7 +23,7 @@ class AddingSalesPageState extends State<AddingSalesPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final snackBar = SnackBar(
-        content: Text('Welcome back, do you want to use the last record'),
+        content: Text('You can use the last record'),
           action:SnackBarAction( label:'Load last record', onPressed: (){
             loadData();
           })
@@ -74,14 +74,42 @@ class AddingSalesPageState extends State<AddingSalesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Adding new sales record'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info), // Action Item icon
+            onPressed: () {
+              // Show AlertDialog with instructions
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Instructions'),
+                    content: const Text(
+                      '1. Use the Snackbar to reload the last record.\n'
+                          '2. Tap submit to insert record to database.\n'
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Please enter new sales record',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,),),
+            Text('Please Enter New Sales Record',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold,),),
             TextField(controller:_controllerCustomerID,decoration: InputDecoration(hintText: "Customer ID",labelText: "Customer ID"),),
             TextField(controller:_controllerCarID,decoration: InputDecoration(hintText: "Car ID",labelText: "Car ID",),),
             TextField(controller:_controllerDealershipID,decoration: InputDecoration(hintText: "Dealership ID",labelText: "Dealership ID",),),
