@@ -1,9 +1,9 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'database/entities/sales_entity.dart';
-import 'database/DAOs/sales_dao.dart';
-import 'database/database.dart';
+import '../database/entities/sales_entity.dart';
+import '../database/DAOs/sales_dao.dart';
+import '../database/database.dart';
 
 class AddingSalesPage extends StatefulWidget {
   @override
