@@ -3,12 +3,15 @@ import 'package:mgi_final/database/DAOs/sales_dao.dart';
 import 'package:mgi_final/database/entities/sales_entity.dart';
 import 'package:mgi_final/database/database.dart';
 
-
+/// Main entry point of the application. Starts the app.
 void main() {
   runApp(const MaterialApp());
 }
 
+/// SalesListPage is a StatefulWidget that displays a list of sales records
+/// and allows the user to interact with them, such as adding, updating, and deleting records.
 class SalesListPage extends StatefulWidget {
+  /// The title for the SalesListPage.
   final String title;
 
   const SalesListPage({Key? key, required this.title}) : super(key: key);
@@ -17,16 +20,20 @@ class SalesListPage extends StatefulWidget {
   State<SalesListPage> createState() => _SalesListPageState();
 }
 
+/// State for SalesListPage. Handles fetching sales records, updating state,
+/// and managing the layout for both mobile and tablet views.
 class _SalesListPageState extends State<SalesListPage> {
   var sale_records = <SalesEntity>[];
   TextEditingController _input = TextEditingController();
   late SalesDAO my_salesDAO;
   SalesEntity? selected_sale_record = null;
 
+  /// Initializes the page, sets up the database, and fetches sales records from the database.
   @override
   void initState() {
     super.initState();
 
+    // Initializes the database and fetches all sales records.
     $FloorMGIFinalDatabase.databaseBuilder('app_database.db').build().then((database) {
       my_salesDAO = database.salesDAO;
       my_salesDAO.getAll().then((listOfItems) {
@@ -38,6 +45,8 @@ class _SalesListPageState extends State<SalesListPage> {
     });
   }
 
+  /// Builds the UI for the SalesListPage.
+  /// Displays either a mobile or tablet layout based on screen size.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +57,7 @@ class _SalesListPageState extends State<SalesListPage> {
           IconButton(
             icon: const Icon(Icons.info),
             onPressed: () {
+              // Shows an AlertDialog with instructions on how to use the interface.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -78,6 +88,9 @@ class _SalesListPageState extends State<SalesListPage> {
     );
   }
 
+  /// Returns a responsive layout that adapts to mobile and tablet views.
+  /// On tablet, displays a two-panel layout. On mobile, displays either the
+  /// sales list or the details page depending on whether a sale is selected.
   Widget reactiveLayout() {
     var size = MediaQuery.of(context).size;
     var height = size.height;
@@ -101,18 +114,17 @@ class _SalesListPageState extends State<SalesListPage> {
     }
   }
 
+  /// Displays a list of sales records with the option to add, update, or delete.
   Widget ToDoList() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "/addingSalesPage");
-              },
-              child: Text("Add"),
-            ),
-
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/addingSalesPage");
+          },
+          child: Text("Add"),
+        ),
         Expanded(
           child: sale_records.isEmpty
               ? Text("There are no sales list in the list")
@@ -139,6 +151,7 @@ class _SalesListPageState extends State<SalesListPage> {
     );
   }
 
+  /// Displays the details of the selected sales record and provides options to update or delete it.
   Widget DetailsPage() {
     if (selected_sale_record != null) {
       return Expanded(
@@ -240,9 +253,7 @@ class _SalesListPageState extends State<SalesListPage> {
                   child: const Text('Delete'),
                 ),
               ],
-            )
-
-
+            ),
           ],
         ),
       );
