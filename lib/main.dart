@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:mgi_final/HomePage.dart';
-import 'salesListPage.dart';
-import 'addingSalesPage.dart';
+import 'sales_list_page/salesListPage.dart';
+import 'sales_list_page/addingSalesPage.dart';
 
 void main() {
   runApp(const MainApp());
