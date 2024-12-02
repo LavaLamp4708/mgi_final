@@ -213,6 +213,33 @@ class _CarsListPageState extends State<CarListPage> {
     });
   }
 
+  void _showDeleteDialog(BuildContext context){
+    showDialog(
+      context: context, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm Deletion"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: [
+            TextButton(
+              onPressed: (){
+                _deleteFromList();
+                Navigator.of(context).pop();
+              },
+              child: const Text("Delete", style: TextStyle(color: Colors.red))
+            ),
+            TextButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel")
+            )
+          ]
+        );
+      }
+    );
+  }
+
   Widget _displayCarsForm(){
     if (!_preferencesAreLoaded) {
       Future.microtask(() => _loadPreferences());
@@ -221,60 +248,69 @@ class _CarsListPageState extends State<CarListPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _selectedCar < 0 ? SizedBox.shrink() : Text("Car #${_selectedCar + 1}"),
-        TextField(
-          focusNode: _brandFocus,
-          controller: _brandController,
-          decoration: const InputDecoration(
-            hintText: "Brand",
-            labelText: "Brand",
-            border: OutlineInputBorder()
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: TextField(
+            focusNode: _brandFocus,
+            controller: _brandController,
+            decoration: const InputDecoration(
+              hintText: "Brand",
+              labelText: "Brand",
+              border: OutlineInputBorder()
+            ),
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) {
+              FocusScope.of(context).requestFocus(_modelFocus);
+            },
           ),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) {
-            FocusScope.of(context).requestFocus(_modelFocus);
-          },
         ),
-        const SizedBox(height: 10,),
-        TextField(
-          focusNode: _modelFocus,
-          controller: _modelController,
-          decoration: const InputDecoration(
-            hintText: "Model",
-            labelText: "Model",
-            border: OutlineInputBorder()
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: TextField(
+            focusNode: _modelFocus,
+            controller: _modelController,
+            decoration: const InputDecoration(
+              hintText: "Model",
+              labelText: "Model",
+              border: OutlineInputBorder()
+            ),
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) {
+              FocusScope.of(context).requestFocus(_numberOfPassengersFocus);
+            },
           ),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) {
-            FocusScope.of(context).requestFocus(_numberOfPassengersFocus);
-          },
         ),
-        const SizedBox(height: 10,),
-        TextField(
-          focusNode: _numberOfPassengersFocus,
-          controller: _numberOfPassengersController,
-          decoration: const InputDecoration(
-            hintText: "Number of Passengers",
-            labelText: "Number of Passengers",
-            border: OutlineInputBorder()
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: TextField(
+            focusNode: _numberOfPassengersFocus,
+            controller: _numberOfPassengersController,
+            decoration: const InputDecoration(
+              hintText: "Number of Passengers",
+              labelText: "Number of Passengers",
+              border: OutlineInputBorder()
+            ),
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) {
+              FocusScope.of(context).requestFocus(_gasTankOrBatterySizeFocus);
+            },
           ),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) {
-            FocusScope.of(context).requestFocus(_gasTankOrBatterySizeFocus);
-          },
         ),
-        const SizedBox(height: 10,),
-        TextField(
-          focusNode: _gasTankOrBatterySizeFocus,
-          controller: _gasTankOrBatterySizeController,
-          decoration: const InputDecoration(
-            hintText: "Gas Tank size in L / Battery capacity in kWh",
-            labelText: "Gas Tank size in L / Battery capacity in kWh",
-            border: OutlineInputBorder()
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: TextField(
+            focusNode: _gasTankOrBatterySizeFocus,
+            controller: _gasTankOrBatterySizeController,
+            decoration: const InputDecoration(
+              hintText: "Gas Tank size in L / Battery capacity in kWh",
+              labelText: "Gas Tank size in L / Battery capacity in kWh",
+              border: OutlineInputBorder()
+            ),
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) {
+              FocusScope.of(context).unfocus();
+            },
           ),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) {
-            FocusScope.of(context).unfocus();
-          },
         ),
         const SizedBox(height: 15),
         Row(
@@ -294,7 +330,7 @@ class _CarsListPageState extends State<CarListPage> {
           const SizedBox.shrink()
           :
           ElevatedButton(
-            onPressed: _deleteFromList, 
+            onPressed: (){_showDeleteDialog(context);}, 
             child: const Text("Delete")
           )
         ],)
@@ -347,6 +383,7 @@ class _CarsListPageState extends State<CarListPage> {
   @override
   build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: _showCarsForm ? _displayCarsForm() : _displayList()
     );
   }
