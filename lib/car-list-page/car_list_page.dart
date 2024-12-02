@@ -1,5 +1,6 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mgi_final/database/database.dart';
 import 'package:mgi_final/database/entities/cars_entity.dart';
 
@@ -218,21 +219,22 @@ class _CarsListPageState extends State<CarListPage> {
       context: context, 
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Confirm Deletion"),
-          content: const Text("Are you sure you want to delete this item?"),
+          title: Text("Confirm Deletion", textAlign: TextAlign.center, style: GoogleFonts.varelaRound(fontWeight: FontWeight.bold)),
+          content: Text("Are you sure you want to delete this item?", style: GoogleFonts.varelaRound(fontSize: 15)),
+          actionsAlignment: MainAxisAlignment.center,
           actions: [
             TextButton(
               onPressed: (){
                 _deleteFromList();
                 Navigator.of(context).pop();
               },
-              child: const Text("Delete", style: TextStyle(color: Colors.red))
+              child: Text("Delete", style: GoogleFonts.varelaRound(fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold))
             ),
             TextButton(
               onPressed: (){
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel")
+              child: Text("Cancel", style: GoogleFonts.varelaRound(fontSize: 15, fontWeight: FontWeight.bold))
             )
           ]
         );
@@ -247,10 +249,14 @@ class _CarsListPageState extends State<CarListPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _selectedCar < 0 ? SizedBox.shrink() : Text("Car #${_selectedCar + 1}"),
+        _selectedCar < 0 ? 
+        Text("Add Car", style: GoogleFonts.varelaRound(fontSize: 40)) 
+        : 
+        Text("Car #${_selectedCar + 1}", style: GoogleFonts.varelaRound(fontSize: 40)),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: TextField(
+            style: GoogleFonts.varelaRound(),
             focusNode: _brandFocus,
             controller: _brandController,
             decoration: const InputDecoration(
@@ -267,6 +273,7 @@ class _CarsListPageState extends State<CarListPage> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: TextField(
+            style: GoogleFonts.varelaRound(),
             focusNode: _modelFocus,
             controller: _modelController,
             decoration: const InputDecoration(
@@ -283,6 +290,8 @@ class _CarsListPageState extends State<CarListPage> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: TextField(
+            style: GoogleFonts.varelaRound(),
+            keyboardType: TextInputType.number,
             focusNode: _numberOfPassengersFocus,
             controller: _numberOfPassengersController,
             decoration: const InputDecoration(
@@ -299,6 +308,8 @@ class _CarsListPageState extends State<CarListPage> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: TextField(
+            style: GoogleFonts.varelaRound(),
+            keyboardType: TextInputType.number,
             focusNode: _gasTankOrBatterySizeFocus,
             controller: _gasTankOrBatterySizeController,
             decoration: const InputDecoration(
@@ -317,21 +328,38 @@ class _CarsListPageState extends State<CarListPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
           _selectedCar < 0 ?
-          ElevatedButton(
-            onPressed: _addToList, 
-            child: const Text("Submit")
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: ElevatedButton(
+              onPressed: _addToList, 
+              child: Text("Submit", style: GoogleFonts.varelaRound(fontSize: 20))
+            ),
           )
           :
-          ElevatedButton(
-            onPressed: _updateList, 
-            child: const Text("Update")
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: ElevatedButton(
+              onPressed: _updateList, 
+              child: Text("Update", style: GoogleFonts.varelaRound(fontSize: 20))
+            ),
           ),
           _selectedCar < 0 ?
-          const SizedBox.shrink()
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: ElevatedButton(
+              onPressed: () { setState(() {
+                _selectedCar = -1;
+                _showCarsForm = false;
+              });}, 
+              child: Text("Cancel", style: GoogleFonts.varelaRound(fontSize: 20))),
+          )
           :
-          ElevatedButton(
-            onPressed: (){_showDeleteDialog(context);}, 
-            child: const Text("Delete")
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: ElevatedButton(
+              onPressed: (){_showDeleteDialog(context);}, 
+              child: Text("Delete", style: GoogleFonts.varelaRound(fontSize: 20))
+            ),
           )
         ],)
       ],
@@ -343,7 +371,8 @@ class _CarsListPageState extends State<CarListPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 50,),
-        ElevatedButton(onPressed: (){setState(() {_showCarsForm = true;});}, child: const Text("Add New Car")),
+        ElevatedButton(onPressed: (){setState(() {_showCarsForm = true; _selectedCar = -1;});}, child: Text("Add New Car", style: GoogleFonts.varelaRound(fontSize: 40))),
+        const SizedBox(height: 25,),
         Expanded(
           child: ListView.builder(
             itemCount: _carsList.length,
@@ -365,10 +394,10 @@ class _CarsListPageState extends State<CarListPage> {
                 child: Row(
                   children: [
                     const SizedBox(width: 15),
-                    Text("Item ${rowNum + 1}."),
+                    Text("Item ${rowNum + 1}.", style: GoogleFonts.varelaRound(fontSize: 20),),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: Text("${_carsList[rowNum].brand} ${_carsList[rowNum].model}")
+                      child: Text("${_carsList[rowNum].brand} ${_carsList[rowNum].model}", style: GoogleFonts.varelaRound(fontSize: 20))
                     )
                   ],
                 )
