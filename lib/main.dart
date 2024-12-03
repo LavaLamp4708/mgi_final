@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mgi_final/HomePage.dart';
+import 'car_dealership_list_page.dart';
 import 'sales_list_page/salesListPage.dart';
 import 'sales_list_page/addingSalesPage.dart';
 
@@ -24,7 +25,7 @@ class MainApp extends StatelessWidget {
 
         //'/customerListPage': (context) =>       const CustomerListPage(title: 'Customers List')
         //'/carListPage': (context) =>            const CarListPage(title: 'Cars List')
-        //'/carDealershipListPage': (context) =>  const CarDealershipListPage(title: 'Car List')
+        '/carDealershipListPage': (context) => const CarDealershipListPage(title: 'Car Dealerships List'),
         '/salesListPage': (context) =>          const SalesListPage(title: 'Sales List'),
         '/addingSalesPage': (context) => AddingSalesPage(),
       },
