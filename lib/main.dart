@@ -25,7 +25,7 @@ class MainApp extends StatelessWidget {
         // Uncomment your page when you're Done with it
 
         //'/customerListPage': (context) =>       const CustomerListPage(title: 'Customers List')
-        '/carListPage': (context) =>            const CarListPage(title: 'Cars List')
+        '/carListPage': (context) =>            const CarListPage(title: 'Cars List'),
         //'/carDealershipListPage': (context) =>  const CarDealershipListPage(title: 'Car List')
         '/salesListPage': (context) =>          const SalesListPage(title: 'Sales List'),
         '/addingSalesPage': (context) => AddingSalesPage(),
