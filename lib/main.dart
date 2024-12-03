@@ -26,13 +26,10 @@ class MainApp extends StatelessWidget {
         // Uncomment your page when you're Done with it
 
         //'/customerListPage': (context) =>       const CustomerListPage(title: 'Customers List')
-<<<<<<< HEAD
         '/carListPage': (context) =>            const CarListPage(title: 'Cars List'),
-        //'/carDealershipListPage': (context) =>  const CarDealershipListPage(title: 'Car List')
-=======
-        //'/carListPage': (context) =>            const CarListPage(title: 'Cars List')
+        '/carDealershipListPage': (context) =>  const CarDealershipListPage(title: 'Car List'),
+        '/carListPage': (context) =>            const CarListPage(title: 'Cars List'),
         '/carDealershipListPage': (context) => const CarDealershipListPage(title: 'Car Dealerships List'),
->>>>>>> 010b793 (Add Car Dealership List Page and update main.dart)
         '/salesListPage': (context) =>          const SalesListPage(title: 'Sales List'),
         '/addingSalesPage': (context) => AddingSalesPage(),
       },

@@ -49,11 +49,11 @@ class _CarDealershipListPageState extends State<CarDealershipListPage> {
     }
 
     final dealership = CarDealershipsEntity(
-      existing?.id ?? CarDealershipsEntity.ID,
-      _nameController.text,
-      _addressController.text,
-      _cityController.text,
-      _postalCodeController.text,
+      id: existing?.id ?? CarDealershipsEntity.ID++,
+      carDealershipName: _nameController.text,
+      streetAddress: _addressController.text,
+      city: _cityController.text,
+      postalCode: _postalCodeController.text,
     );
 
     if (existing == null) {
