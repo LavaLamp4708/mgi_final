@@ -108,7 +108,7 @@ class _$MGIFinalDatabase extends MGIFinalDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CustomersEntity` (`id` INTEGER NOT NULL, `firstName` TEXT NOT NULL, `lastName` TEXT NOT NULL, `address` TEXT NOT NULL, `birthDate` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `SalesEntity` (`id` INTEGER NOT NULL, `customerId` INTEGER NOT NULL, `carId` INTEGER NOT NULL, `dealershipId` INTEGER NOT NULL, `datOfPurchase` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `SalesEntity` (`id` INTEGER NOT NULL, `customer_id` TEXT NOT NULL, `car_id` TEXT NOT NULL, `dealership_id` TEXT NOT NULL, `date_of_purchase` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -385,10 +385,10 @@ class _$SalesDAO extends SalesDAO {
             'SalesEntity',
             (SalesEntity item) => <String, Object?>{
                   'id': item.id,
-                  'customerId': item.customerId,
-                  'carId': item.carId,
-                  'dealershipId': item.dealershipId,
-                  'datOfPurchase': item.datOfPurchase
+                  'customer_id': item.customer_id,
+                  'car_id': item.car_id,
+                  'dealership_id': item.dealership_id,
+                  'date_of_purchase': item.date_of_purchase
                 }),
         _salesEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -396,10 +396,10 @@ class _$SalesDAO extends SalesDAO {
             ['id'],
             (SalesEntity item) => <String, Object?>{
                   'id': item.id,
-                  'customerId': item.customerId,
-                  'carId': item.carId,
-                  'dealershipId': item.dealershipId,
-                  'datOfPurchase': item.datOfPurchase
+                  'customer_id': item.customer_id,
+                  'car_id': item.car_id,
+                  'dealership_id': item.dealership_id,
+                  'date_of_purchase': item.date_of_purchase
                 }),
         _salesEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -407,10 +407,10 @@ class _$SalesDAO extends SalesDAO {
             ['id'],
             (SalesEntity item) => <String, Object?>{
                   'id': item.id,
-                  'customerId': item.customerId,
-                  'carId': item.carId,
-                  'dealershipId': item.dealershipId,
-                  'datOfPurchase': item.datOfPurchase
+                  'customer_id': item.customer_id,
+                  'car_id': item.car_id,
+                  'dealership_id': item.dealership_id,
+                  'date_of_purchase': item.date_of_purchase
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -430,10 +430,10 @@ class _$SalesDAO extends SalesDAO {
     return _queryAdapter.queryList('SELECT * FROM SalesEntity',
         mapper: (Map<String, Object?> row) => SalesEntity(
             row['id'] as int,
-            row['customerId'] as int,
-            row['carId'] as int,
-            row['dealershipId'] as int,
-            row['datOfPurchase'] as String));
+            row['customer_id'] as String,
+            row['car_id'] as String,
+            row['dealership_id'] as String,
+            row['date_of_purchase'] as String));
   }
 
   @override
