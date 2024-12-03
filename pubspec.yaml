@@ -12,6 +12,7 @@ dependencies:
   floor: ^1.4.0
   sqflite: ^2.0.0+4
   encrypted_shared_preferences: ^3.0.1
+  google_fonts: ^5.0.0
 
 dev_dependencies:
   flutter_test:

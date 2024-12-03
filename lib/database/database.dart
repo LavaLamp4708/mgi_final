@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:floor/floor.dart';
 import 'package:mgi_final/database/entities/car_dealerships_entity.dart';
 import 'package:mgi_final/database/entities/cars_entity.dart';
