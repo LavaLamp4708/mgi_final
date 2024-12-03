@@ -12,7 +12,6 @@ dependencies:
   floor: ^1.4.0
   sqflite: ^2.0.0+4
   encrypted_shared_preferences: ^3.0.1
-  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
