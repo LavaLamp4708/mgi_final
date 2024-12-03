@@ -1,23 +1,18 @@
 import 'package:floor/floor.dart';
 
-@entity
+@Entity(tableName: 'CarDealershipsEntity')
 class CarDealershipsEntity {
-  static int ID = 1;
-
   @primaryKey
-  final int id;
-  final String carDealershipName;
+  final int? id;  // Nullable primary key for auto-increment
   final String streetAddress;
   final String city;
   final String postalCode;
 
-  CarDealershipsEntity(
-    this.id, 
-    this.carDealershipName, 
-    this.streetAddress, 
-    this.city, 
-    this.postalCode
-  ) {
-    ID = id > ID ? id+1 : ID;
-  }
+  CarDealershipsEntity({
+    this.id,  // id is nullable for auto-increment
+    required this.streetAddress,
+    required this.city,
+    required this.postalCode,
+  });
 }
+
