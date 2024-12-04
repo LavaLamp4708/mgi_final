@@ -7,6 +7,8 @@ import 'sales_list_page/addingSalesPage.dart';
 
 import 'car-list-page/car_list_page.dart';
 
+import 'car-list-page/car_list_page.dart';
+
 void main() {
   runApp(const MainApp());
 }
