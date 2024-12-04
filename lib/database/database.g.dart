@@ -102,7 +102,7 @@ class _$MGIFinalDatabase extends MGIFinalDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `CarDealershipsEntity` (`id` INTEGER NOT NULL, `carDealershipName` TEXT NOT NULL, `streetAddress` TEXT NOT NULL, `city` TEXT NOT NULL, `postalCode` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `CarDealershipsEntity` (`id` INTEGER, `streetAddress` TEXT NOT NULL, `city` TEXT NOT NULL, `postalCode` TEXT NOT NULL, `carDealershipName` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CarsEntity` (`id` INTEGER NOT NULL, `brand` TEXT NOT NULL, `model` TEXT NOT NULL, `numberOfPassengers` INTEGER NOT NULL, `gasTankOrBatterySize` REAL NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
@@ -148,10 +148,10 @@ class _$CarDealershipsDAO extends CarDealershipsDAO {
             'CarDealershipsEntity',
             (CarDealershipsEntity item) => <String, Object?>{
                   'id': item.id,
-                  'carDealershipName': item.carDealershipName,
                   'streetAddress': item.streetAddress,
                   'city': item.city,
-                  'postalCode': item.postalCode
+                  'postalCode': item.postalCode,
+                  'carDealershipName': item.carDealershipName
                 }),
         _carDealershipsEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -159,10 +159,10 @@ class _$CarDealershipsDAO extends CarDealershipsDAO {
             ['id'],
             (CarDealershipsEntity item) => <String, Object?>{
                   'id': item.id,
-                  'carDealershipName': item.carDealershipName,
                   'streetAddress': item.streetAddress,
                   'city': item.city,
-                  'postalCode': item.postalCode
+                  'postalCode': item.postalCode,
+                  'carDealershipName': item.carDealershipName
                 }),
         _carDealershipsEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -170,10 +170,10 @@ class _$CarDealershipsDAO extends CarDealershipsDAO {
             ['id'],
             (CarDealershipsEntity item) => <String, Object?>{
                   'id': item.id,
-                  'carDealershipName': item.carDealershipName,
                   'streetAddress': item.streetAddress,
                   'city': item.city,
-                  'postalCode': item.postalCode
+                  'postalCode': item.postalCode,
+                  'carDealershipName': item.carDealershipName
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -194,28 +194,28 @@ class _$CarDealershipsDAO extends CarDealershipsDAO {
   Future<List<CarDealershipsEntity>> getAll() async {
     return _queryAdapter.queryList('SELECT * FROM CarDealershipsEntity',
         mapper: (Map<String, Object?> row) => CarDealershipsEntity(
-            row['id'] as int,
-            row['carDealershipName'] as String,
-            row['streetAddress'] as String,
-            row['city'] as String,
-            row['postalCode'] as String));
+            id: row['id'] as int?,
+            streetAddress: row['streetAddress'] as String,
+            city: row['city'] as String,
+            postalCode: row['postalCode'] as String,
+            carDealershipName: row['carDealershipName'] as String));
   }
 
   @override
-  Future<void> doInsert(CarDealershipsEntity carDealership) async {
+  Future<void> doInsert(CarDealershipsEntity dealership) async {
     await _carDealershipsEntityInsertionAdapter.insert(
-        carDealership, OnConflictStrategy.abort);
+        dealership, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> doUpdate(CarDealershipsEntity carDealership) async {
+  Future<void> doUpdate(CarDealershipsEntity dealership) async {
     await _carDealershipsEntityUpdateAdapter.update(
-        carDealership, OnConflictStrategy.abort);
+        dealership, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> doDelete(CarDealershipsEntity carDealership) async {
-    await _carDealershipsEntityDeletionAdapter.delete(carDealership);
+  Future<void> doDelete(CarDealershipsEntity dealership) async {
+    await _carDealershipsEntityDeletionAdapter.delete(dealership);
   }
 }
 
