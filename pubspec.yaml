@@ -1,7 +1,13 @@
 name: mgi_final
-description: "A new Flutter project."
+description: "A car dealership managegement application"
 publish_to: 'none'
 version: 0.1.0
+
+authors:
+  - Bob Paul <paul0375@algonquinlive.com>
+  - Peter Stainforth <stai0029@algonquinlive.com>
+  - Melbin Benny Thomas <thom1654@algonquinlive.com>
+  - Yanbo Ma <ma000166@algonquinlive.com>
 
 environment:
   sdk: ^3.5.2
