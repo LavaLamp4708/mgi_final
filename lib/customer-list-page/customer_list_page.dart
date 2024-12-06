@@ -1,10 +1,12 @@
+// Bob Paul: Customer list view page
 import 'package:flutter/material.dart';
 import 'package:mgi_final/database/entities/customers_entity.dart';
 import 'package:mgi_final/database/database.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Required for encrypted shared preferences
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mgi_final/customer-list-page/customer_form_page.dart';
 
 class CustomerListPage extends StatefulWidget {
-  const CustomerListPage({Key? key, required this.title}) : super(key: key);
+  const CustomerListPage({super.key, required this.title});
   final String title;
 
   @override
@@ -87,9 +89,51 @@ class _CustomerListPageState extends State<CustomerListPage> {
     );
   }
 
+  void _confirmDeleteCustomer(CustomersEntity customer) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Customer'),
+        content: const Text('Are you sure you want to delete this customer?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              _deleteCustomer(customer);
+              Navigator.pop(context);
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _deleteCustomer(CustomersEntity customer) async {
     await database.customersDAO.doDelete(customer);
     _loadCustomers();
+  }
+
+  void _showHelpDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Help'),
+        content: const Text(
+            'To add a customer, click the "+" button.\n\n'
+                'To edit a customer, tap their name.\n\n'
+                'To delete a customer, swipe left or click the trash icon.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -98,6 +142,12 @@ class _CustomerListPageState extends State<CustomerListPage> {
       appBar: AppBar(
         title: Text(widget.title),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline),
+            onPressed: _showHelpDialog,
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: customers.length,
@@ -109,7 +159,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
             onTap: () => _editCustomer(customer),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _deleteCustomer(customer),
+              onPressed: () => _confirmDeleteCustomer(customer),
             ),
           );
         },
@@ -117,101 +167,6 @@ class _CustomerListPageState extends State<CustomerListPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addCustomer,
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class CustomerFormPage extends StatefulWidget {
-  final Function(CustomersEntity) onSave;
-  final CustomersEntity? initialCustomer;
-
-  const CustomerFormPage({
-    Key? key,
-    required this.onSave,
-    this.initialCustomer,
-  }) : super(key: key);
-
-  @override
-  State<CustomerFormPage> createState() => _CustomerFormPageState();
-}
-
-class _CustomerFormPageState extends State<CustomerFormPage> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _birthDateController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.initialCustomer != null) {
-      _firstNameController.text = widget.initialCustomer!.firstName;
-      _lastNameController.text = widget.initialCustomer!.lastName;
-      _addressController.text = widget.initialCustomer!.address;
-      _birthDateController.text = widget.initialCustomer!.birthDate;
-    }
-  }
-
-  bool _validateFields() {
-    return _firstNameController.text.isNotEmpty &&
-        _lastNameController.text.isNotEmpty &&
-        _addressController.text.isNotEmpty &&
-        _birthDateController.text.isNotEmpty;
-  }
-
-  void _submitForm() {
-    if (_validateFields()) {
-      final customer = CustomersEntity(
-        widget.initialCustomer?.id ?? CustomersEntity.ID++,
-        _firstNameController.text,
-        _lastNameController.text,
-        _addressController.text,
-        _birthDateController.text,
-      );
-      widget.onSave(customer);
-      Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all fields.')),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Customer Form'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _firstNameController,
-              decoration: const InputDecoration(labelText: 'First Name'),
-            ),
-            TextField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(labelText: 'Last Name'),
-            ),
-            TextField(
-              controller: _addressController,
-              decoration: const InputDecoration(labelText: 'Address'),
-            ),
-            TextField(
-              controller: _birthDateController,
-              decoration: const InputDecoration(labelText: 'Birth Date'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _submitForm,
-              child: const Text('Save'),
-            ),
-          ],
-        ),
       ),
     );
   }
