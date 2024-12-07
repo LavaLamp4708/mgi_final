@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mgi_final/HomePage.dart';
-import 'car_dealership_list_page.dart';
+import 'car_dealership_list_page/car_dealership_list_page.dart';
 import 'customer-list-page/customer_list_page.dart';
 import 'sales_list_page/salesListPage.dart';
 import 'sales_list_page/addingSalesPage.dart';
