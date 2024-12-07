@@ -4,7 +4,7 @@ import 'package:mgi_final/database/database.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Required for encrypted shared preferences
 
 class CustomerListPage extends StatefulWidget {
-  const CustomerListPage({Key? key, required this.title}) : super(key: key);
+  const CustomerListPage({super.key, required this.title});
   final String title;
 
   @override
